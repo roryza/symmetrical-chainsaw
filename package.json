@@ -1,0 +1,29 @@
+{
+  "name": "symmetrical-chainsaw",
+  "version": "1.0.0",
+  "description": "Google ALC Challenge Currency Converter",
+  "main": "gulpfile.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/roryza/symmetrical-chainsaw.git"
+  },
+  "author": "Rory Austin",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/roryza/symmetrical-chainsaw/issues"
+  },
+  "homepage": "https://github.com/roryza/symmetrical-chainsaw#readme",
+  "devDependencies": {
+    "babel": "^6.23.0",
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "del": "^3.0.0",
+    "gulp": "^3.9.1",
+    "gulp-babel": "^7.0.1",
+    "idb": "^2.1.3",
+    "run-sequence": "^2.2.1"
+  }
+}
