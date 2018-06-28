@@ -10,7 +10,7 @@ gulp.task("default", function (callback) {
 );
 
 gulp.task('clean', function (done) {
-  return del(['./dist/'], done);
+  return del(['./docs/'], done);
 });
 
 gulp.task('copy',function(){
@@ -18,17 +18,17 @@ gulp.task('copy',function(){
       './src/main.css',
       './src/index.html'
   ],  {base: './src/'}) 
-  .pipe(gulp.dest('./dist/'));
+  .pipe(gulp.dest('./docs/'));
 });
 
 gulp.task("transform", function () {
   return gulp.src("src/app.js")
     .pipe(babel())
-    .pipe(gulp.dest("dist"));
+    .pipe(gulp.dest("docs"));
 });
 
 gulp.task("transform-sw", function () {
   return gulp.src("src/serviceworker.js")
     .pipe(babel())
-    .pipe(gulp.dest("dist"));
+    .pipe(gulp.dest("docs"));
 });
