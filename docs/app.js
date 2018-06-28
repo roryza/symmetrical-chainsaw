@@ -1,28 +1,35 @@
-'use strict';
+"use strict";
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+//import idb from 'idb';
 
-var _idb = require('idb');
+window.onload = function () {
+	fetch("https://free.currencyconverterapi.com/api/v5/currencies").then(function (response) {
+		return response.json();
+	}).then(function (json) {
+		var currencies = Object.entries(json.results).map(function (entry) {
+			return entry[1];
+		}).sort(function (a, b) {
+			return a.id.localeCompare(b.id);
+		});
+		populateCurrencies(currencies, "fromDropdown");
+		populateCurrencies(currencies, "toDropdown");
+	});
+};
 
-var _idb2 = _interopRequireDefault(_idb);
+window.populateCurrencies = function (currencies, elementId) {
+	var selectHTML = "";
+	var elementRef = document.getElementById(elementId);
+	var currentlySelectedValue = elementRef.value;
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	var select = elementRef.options.length;
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var Test = function () {
-	function Test() {
-		_classCallCheck(this, Test);
+	for (var i = 0; i < select; i++) {
+		elementRef.options.remove(i);
 	}
 
-	_createClass(Test, [{
-		key: 'testfunc',
-		value: function testfunc(x) {
-			(function (x) {
-				return x;
-			});
-		}
-	}]);
-
-	return Test;
-}();
+	currencies.map(function (currency) {
+		var newSelect = document.createElement('option');
+		newSelect.innerHTML = "<option value=\"" + currency.id + "\">" + currency.id + " | " + currency.currencyName + " (" + (currency.currencySymbol || currency.id) + ")</option>";
+		elementRef.add(newSelect);
+	});
+};
