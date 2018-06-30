@@ -34,7 +34,7 @@ self.addEventListener('fetch', function (event) {
 
     // return "homepage"
     if (requestUrl.pathname === '/') {
-      return caches.open(cacheName).then(function (cache) {
+      event.respondWith(caches.open(cacheName).then(function (cache) {
         return cache.match('index.html').then(function (response) {
           if (response) {
             console.log('Found in cache: ' + event.request.url);
@@ -44,16 +44,16 @@ self.addEventListener('fetch', function (event) {
           console.log('Need network for: ' + event.request.url);
           return fetch(event.request).then(function (networkResponse) {
             cache.put('index.html', networkResponse.clone());
-            event.respondWith(networkResponse);
             return networkResponse;
           });
         });
-      });
+      }));
+      return;
     }
 
     console.log('Serving from cache: ' + event.request.url);
     // if not cached, fetch from network and cache
-    return caches.open(cacheName).then(function (cache) {
+    event.respondWith(caches.open(cacheName).then(function (cache) {
       return cache.match(event.request).then(function (response) {
         if (response) {
           console.log('Found in cache: ' + event.request.url);
@@ -63,14 +63,16 @@ self.addEventListener('fetch', function (event) {
         console.log('Need network for: ' + event.request.url);
         return fetch(event.request).then(function (networkResponse) {
           cache.put(event.request, networkResponse.clone());
-          event.respondWith(networkResponse);
           return networkResponse;
         });
       });
-    });
+    }));
+    return;
   }
   // https://free.currencyconverterapi.com bypasses cache
 
+
+  // https://fonts.googleapis.com should be served from cache here
   console.log('Serving from network: ' + event.request.url);
   // catch all in case we have it in the cache, but we're not caching api requests as we'll handle with IndexDB
   event.respondWith(caches.match(event.request).then(function (response) {

@@ -44,8 +44,9 @@ self.addEventListener('fetch', event => {
       
       // return "homepage"
       if (requestUrl.pathname === '/') {
-        return caches.open(cacheName).then(cache =>
-          cache.match('index.html').then(response => {
+        event.respondWith(        
+          caches.open(cacheName).then(cache =>
+            cache.match('index.html').then(response => {
             if (response){
               console.log(`Found in cache: ${event.request.url}`);
               return response;
@@ -54,16 +55,18 @@ self.addEventListener('fetch', event => {
             console.log(`Need network for: ${event.request.url}`);
             return fetch(event.request).then(networkResponse => {
               cache.put('index.html', networkResponse.clone());
-              event.respondWith(networkResponse);
               return networkResponse;
             });
           })
+        )
         );
+        return;
       }
 
       console.log(`Serving from cache: ${event.request.url}`);
       // if not cached, fetch from network and cache
-      return caches.open(cacheName).then(cache =>
+      event.respondWith(        
+        caches.open(cacheName).then(cache =>
         cache.match(event.request).then(response => {
           if (response){
             console.log(`Found in cache: ${event.request.url}`);
@@ -73,11 +76,12 @@ self.addEventListener('fetch', event => {
           console.log(`Need network for: ${event.request.url}`);
           return fetch(event.request).then(networkResponse => {
             cache.put(event.request, networkResponse.clone());
-            event.respondWith(networkResponse);
             return networkResponse;
           });
         })
+      )
       );
+      return;
     }
     // https://free.currencyconverterapi.com bypasses cache
 
