@@ -1,5 +1,3 @@
-//import idb from 'idb';
-
 window.onload = () =>
 {
 	fetch("https://free.currencyconverterapi.com/api/v5/currencies")
@@ -25,14 +23,38 @@ window.populateCurrencies = (currencies, elementId) => {
 	currencies.map(currency => {
 		let newSelect = document.createElement('option');
 		newSelect.innerHTML = `<option value="${currency.id}">${currency.id} | ${currency.currencyName} (${currency.currencySymbol || currency.id})</option>`;
+		newSelect.value = currency.id;
 		elementRef.add(newSelect);
 	});
 }
 
-window.convert = () => {
-
+window.convert = (e) => {
+	e.preventDefault();
+	e.stopPropagation();
+    let fromDropdown = document.getElementById("fromDropdown");
+    let toDropdown = document.getElementById("toDropdown");
+    let amount = document.getElementById("amount").value;
+    let resultElement = document.getElementById("result");
+	convertCurrency(fromDropdown.options[fromDropdown.selectedIndex].value, toDropdown.options[toDropdown.selectedIndex].value, amount, resultElement);
 }
 
+window.convertCurrency = (fromCurrency, toCurrency, amount, resultElement) => {
+    let apiUrl = `https://free.currencyconverterapi.com/api/v5/convert?q=${fromCurrency}_${toCurrency}&compact=y`;
+
+    fetch(apiUrl)
+		.then((response) => response.json())
+		.then((data) => {
+			let value = data[`${fromCurrency}_${toCurrency}`].val;
+
+            if (value != undefined)
+                resultElement.value = parseFloat(value) * parseFloat(amount);
+            else
+                console.log(new Error("Invalid result received"));
+        })
+        .catch(err =>{
+			console.log('Request failed', err)
+		});
+};
 
 window.registerServiceWorker = () => {
 	if (!navigator.serviceWorker) 
@@ -62,9 +84,9 @@ window.registerServiceWorker = () => {
   
 	  reg.addEventListener('updatefound', x => {
 		console.log('updatefound');
-		reg.installing.addEventListener('statechange', x => {
-			if (reg.installing.state == 'installed')
-				reg.installing.postMessage({action: 'skipWaiting'});
+		reg.installing.addEventListener('statechange', worker => {
+			if (worker.state == 'installed')
+				worker.postMessage({action: 'skipWaiting'});
 		  });
 	  });
 
