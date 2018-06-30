@@ -1,34 +1,29 @@
-// from https://babeljs.io/en/setup.html#installation
-var gulp = require("gulp");
-var babel = require("gulp-babel");
-var runSequence = require('run-sequence');
-var del = require('del');
+let gulp = require("gulp");
+let babel = require("gulp-babel");
+let runSequence = require('run-sequence');
+let del = require('del');
 
-gulp.task("default", function (callback) {
-  runSequence('clean', ['copy', 'transform', 'transform-sw'], callback);
-}
+gulp.task("default", done => 
+  runSequence('clean', ['copy', 'transform', 'transform-sw'], done)
 );
 
-gulp.task('clean', function (done) {
-  return del(['./docs/'], done);
-});
+gulp.task('clean', done => del(['./docs/'], done));
 
-gulp.task('copy',function(){
-  return gulp.src([
+gulp.task('copy', x => gulp.src([
       './src/main.css',
       './src/index.html'
   ],  {base: './src/'}) 
-  .pipe(gulp.dest('./docs/'));
-});
+  .pipe(gulp.dest('./docs/'))
+);
 
-gulp.task("transform", function () {
-  return gulp.src("src/app.js")
+gulp.task("transform", x =>
+  gulp.src("src/app.js")
     .pipe(babel())
-    .pipe(gulp.dest("docs"));
-});
+    .pipe(gulp.dest("docs"))
+);
 
-gulp.task("transform-sw", function () {
-  return gulp.src("src/serviceworker.js")
+gulp.task("transform-sw", x =>
+  gulp.src("src/serviceworker.js")
     .pipe(babel())
-    .pipe(gulp.dest("docs"));
-});
+    .pipe(gulp.dest("docs"))
+);
