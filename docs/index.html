@@ -7,6 +7,9 @@
 		<link rel="stylesheet" href="main.css" />
 		<script src="idb.js"></script>
 		<script src="app.js"></script>
+		<script>
+			registerServiceWorker();
+		</script>
 	</head>
 	<body>
 		<div class="box">
@@ -18,11 +21,21 @@
 					</p>
 
 					<form>
+						<label for="amount">Amount: </label>
+						<input id="amount" type="number" name="amount" value="1" />
+						<br/>
 						<label for="fromDropdown">From: </label>
 						<select id="fromDropdown"></select>
 						<br/>
 						<label for="toDropdown">To: </label>
 						<select id="toDropdown"></select>
+						<br/>
+						<input type="submit" value="Convert" />
+						<br />
+						<label for="result">Result: </label>
+						<input id="result" type="number" name="result" readonly />
+						<br/>
+
 					</form>
 				</div>
 			</div>
