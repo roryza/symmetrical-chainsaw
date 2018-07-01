@@ -7,6 +7,7 @@ class IdbCurrencyConverter {
         this.baseApiUrl = 'https://free.currencyconverterapi.com/api/v5/';
         this.idbName = 'currency-converter';
         this.dbPromise = this.openDatabase();
+        this.timeToKeepRates = 1000 * 60 * 60; // 60 min, same as the api update rate
     }
 
     openDatabase() {
@@ -33,7 +34,8 @@ class IdbCurrencyConverter {
                 else {
                     // use currencies stored locally to populate dropdowns
                     this.populateCurrencyDropdowns(currencies, this.fromDropdownRef, 'USD');
-                    this.populateCurrencyDropdowns(currencies, this.toDropdownRef, 'ZAR');                }
+                    this.populateCurrencyDropdowns(currencies, this.toDropdownRef, 'ZAR');
+                }
             })
             .catch(reason => {
                 console.log(reason);
@@ -69,7 +71,7 @@ class IdbCurrencyConverter {
         const coolCurrencies = ['USD', 'ZAR', 'UGX', 'KSH', 'NGN'];
         currencies.map(currency => {
             let newSelect = document.createElement('option');
-            
+
             newSelect.innerHTML = `${currency.id} | ${currency.currencyName} (${currency.currencySymbol || currency.id})`;
             newSelect.value = currency.id;
 
@@ -94,13 +96,23 @@ class IdbCurrencyConverter {
         const pair = `${fromCurrency}_${toCurrency}`;
 
         return this.dbPromise.then(db => {
-            db.transaction('rates').objectStore('rates').get(pair).then( val => {
-                if (val === undefined)
+            db.transaction('rates').objectStore('rates').get(pair).then(val => {
+                if (val === undefined) {
+                    // query api
                     this.queryForRate(fromCurrency, toCurrency).then(rate => {
                         resultElement.value = Number(parseFloat(amount) * rate).toFixed(2);
                     });
-                else
-                    resultElement.value = Number(parseFloat(amount) * val.rate).toFixed(2);
+                } else {
+                    if (Date.now() - val.timestamp >= this.timeToKeepRates) {
+                        // update it immediately, and query the api then update
+                        resultElement.value = Number(parseFloat(amount) * val.rate).toFixed(2);
+                        this.queryForRate(fromCurrency, toCurrency).then(rate => {
+                            resultElement.value = Number(parseFloat(amount) * rate).toFixed(2);
+                        });
+                    } else
+                        // set using stored rate
+                        resultElement.value = Number(parseFloat(amount) * val.rate).toFixed(2);
+                }
             });
         });
     }
@@ -117,18 +129,22 @@ class IdbCurrencyConverter {
                 console.log(`Successfully fetched for ${pair}: `, value);
                 const swappedValue = parseFloat(1) / value;
 
-                if (value != undefined)
-                {
+                if (value != undefined) {
                     // store for later
                     this.dbPromise.then(db => {
                         let store = db.transaction('rates', 'readwrite').objectStore('rates');
-                        store.put({rate: value, timestamp: Date.now()}, pair);
-                        store.put({rate: swappedValue, timestamp: Date.now()}, swappedPair); // infer the swapped rate and store that as well, half as many api requests :)
+                        store.put({
+                            rate: value,
+                            timestamp: Date.now()
+                        }, pair);
+                        store.put({
+                            rate: swappedValue,
+                            timestamp: Date.now()
+                        }, swappedPair); // infer the swapped rate and store that as well, half as many api requests :)
                     });
 
                     return value;
-                }
-                else {
+                } else {
                     console.log(new Error("Invalid result received"));
                     return 0;
                 }

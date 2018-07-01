@@ -14,6 +14,7 @@ var IdbCurrencyConverter = function () {
         this.baseApiUrl = 'https://free.currencyconverterapi.com/api/v5/';
         this.idbName = 'currency-converter';
         this.dbPromise = this.openDatabase();
+        this.timeToKeepRates = 1000 * 60 * 1; // 5 min
     }
 
     _createClass(IdbCurrencyConverter, [{
@@ -118,9 +119,23 @@ var IdbCurrencyConverter = function () {
 
             return this.dbPromise.then(function (db) {
                 db.transaction('rates').objectStore('rates').get(pair).then(function (val) {
-                    if (val === undefined) _this3.queryForRate(fromCurrency, toCurrency).then(function (rate) {
-                        resultElement.value = Number(parseFloat(amount) * rate).toFixed(2);
-                    });else resultElement.value = Number(parseFloat(amount) * val.rate).toFixed(2);
+                    if (val === undefined) {
+                        // query api
+                        _this3.queryForRate(fromCurrency, toCurrency).then(function (rate) {
+                            resultElement.value = Number(parseFloat(amount) * rate).toFixed(2);
+                        });
+                    } else {
+                        console.log(Date.now() - val.timestamp >= _this3.timeToKeepRates);
+                        if (Date.now() - val.timestamp >= _this3.timeToKeepRates) {
+                            // update it immediately, and query the api then update
+                            resultElement.value = Number(parseFloat(amount) * val.rate).toFixed(2);
+                            _this3.queryForRate(fromCurrency, toCurrency).then(function (rate) {
+                                resultElement.value = Number(parseFloat(amount) * rate).toFixed(2);
+                            });
+                        } else
+                            // set using stored rate
+                            resultElement.value = Number(parseFloat(amount) * val.rate).toFixed(2);
+                    }
                 });
             });
         }
@@ -144,8 +159,14 @@ var IdbCurrencyConverter = function () {
                     // store for later
                     _this4.dbPromise.then(function (db) {
                         var store = db.transaction('rates', 'readwrite').objectStore('rates');
-                        store.put({ rate: value, timestamp: Date.now() }, pair);
-                        store.put({ rate: swappedValue, timestamp: Date.now() }, swappedPair); // infer the swapped rate and store that as well, half as many api requests :)
+                        store.put({
+                            rate: value,
+                            timestamp: Date.now()
+                        }, pair);
+                        store.put({
+                            rate: swappedValue,
+                            timestamp: Date.now()
+                        }, swappedPair); // infer the swapped rate and store that as well, half as many api requests :)
                     });
 
                     return value;
