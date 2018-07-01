@@ -2,7 +2,7 @@
 
 This is a PWA (Progressive Web App) written as part of the [Andela](https://andela.com/) Learning Community **#7DaysOfCodeChallenge**.
 
-#### Features:
+### Features:
 - Allows the user to select two currencies, enter an amount and convert between them at the current exchange rate.
 - Is "installable" by using the "Add to Homescreen" feature in Google Chrome as well as similar features in other browsers and Windows.
 - Responsive design that fits well on mobile phones.
@@ -19,10 +19,10 @@ Jake Archibald's [idb library](https://github.com/jakearchibald/idb) has been us
 
 [Express](https://expressjs.com/) is a simple web server used for testing during development, in order for the service worker to be enabled.
 
-#### Demo:
+### Demo:
 Simply go to **https://roryza.github.io/symmetrical-chainsaw/**
 
-#### Instructions:
+### Instructions:
 ##### Local:
 Clone or download the repo.
 Run `npm install` to restore all dependencies.
@@ -35,3 +35,18 @@ Clone or download the repo.
 Upload the "/docs" folder to a web host. (the built files are included in the repo for hosting on Github Pages)
 
 **Note that the free version of the Currency Converter API supports a maximum of 100 requests per hour.** The app will typically only do 1 request for a list of currencies and then one request per currency pair per hour so this means you effectively can't do more than
+
+
+### Known Issues
+- The currencies list is only loaded once. Theoretically this could change, and this would require a code change to "refresh"
+- The 60 minutes that rates are cached is an approximation of the refreshing on the free API. It is possible a value in the cache is still used when a new rate is available via the API. We could change this to always use the cached rate then the latest rate however that would increase the number of API requests substantially.
+- Their isn't a "nice" refresh dialog. SW will basically always skip waiting.
+
+### Nice to haves
+- Detect when the user is offline and show a warning
+- A "swap" button to swap selections
+- Small chart from the history api
+- Remember the users last currency selection
+- Provide a log/history of conversions (maybe, might clutter simple interface)
+- Progress indicator when fetching a rate
+- 
