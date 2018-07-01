@@ -2,10 +2,9 @@
     "dir": "ltr",
     "lang": "en",
     "name": "Currency Converter",
-    "scope": "./",
     "display": "standalone",
     "start_url": "https://roryza.github.io/symmetrical-chainsaw/",
-    "short_name": "CCY Convert",
+    "short_name": "Converter",
     "theme_color": "transparent",
     "description": "Currency Conversion app",
     "orientation": "any",
@@ -79,11 +78,6 @@
         {
             "src": "./pwaicons/3c1f316c-2153-f569-0362-648e6f3d66f7.webPlatform.png",
             "sizes": "36x36",
-            "type": "image/png"
-        },
-        {
-            "src": "./pwaicons/ios/ios-appicon-1024-1024.png",
-            "sizes": "1024x1024",
             "type": "image/png"
         },
         {
