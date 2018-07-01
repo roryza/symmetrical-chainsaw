@@ -9,8 +9,8 @@ window.onload = () => {
 window.convert = (e) => {
 	e.preventDefault();
 	e.stopPropagation();
-	let amount = document.getElementById('amount').value;
-	let resultElement = document.getElementById('result');
+	const amount = document.getElementById('amount').value;
+	const resultElement = document.getElementById('result');
 	icc.convertCurrency(amount, resultElement);
 };
 
@@ -34,8 +34,8 @@ window.registerServiceWorker = () => {
 
 		if (reg.installing) {
 			console.log('reg.installing');
-			reg.installing.addEventListener('statechange', x => {
-				if (reg.installing.state == 'installed')
+			reg.installing.addEventListener('statechange', () => {
+				if (reg.installing.state === 'installed')
 					reg.installing.postMessage({
 						action: 'skipWaiting'
 					});
@@ -43,10 +43,10 @@ window.registerServiceWorker = () => {
 			return;
 		}
 
-		reg.addEventListener('updatefound', x => {
+		reg.addEventListener('updatefound', () => {
 			console.log('updatefound');
 			reg.installing.addEventListener('statechange', worker => {
-				if (worker.state == 'installed')
+				if (worker.state === 'installed')
 					worker.postMessage({
 						action: 'skipWaiting'
 					});
@@ -58,7 +58,7 @@ window.registerServiceWorker = () => {
 	// Ensure refresh is only called once.
 	// This works around a bug in "force update on reload".
 	let refreshing = false;
-	navigator.serviceWorker.addEventListener('controllerchange', x => {
+	navigator.serviceWorker.addEventListener('controllerchange', () => {
 		if (refreshing) return;
 		window.location.reload();
 		refreshing = true;

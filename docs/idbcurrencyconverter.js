@@ -178,6 +178,7 @@ var IdbCurrencyConverter = function () {
                 }
             }).catch(function (err) {
                 console.log('Request failed', err);
+                alert('You will need to go online to perform this conversion');
                 return 0;
             });
         }

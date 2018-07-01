@@ -32,18 +32,18 @@ window.registerServiceWorker = function () {
 
 		if (reg.installing) {
 			console.log('reg.installing');
-			reg.installing.addEventListener('statechange', function (x) {
-				if (reg.installing.state == 'installed') reg.installing.postMessage({
+			reg.installing.addEventListener('statechange', function () {
+				if (reg.installing.state === 'installed') reg.installing.postMessage({
 					action: 'skipWaiting'
 				});
 			});
 			return;
 		}
 
-		reg.addEventListener('updatefound', function (x) {
+		reg.addEventListener('updatefound', function () {
 			console.log('updatefound');
 			reg.installing.addEventListener('statechange', function (worker) {
-				if (worker.state == 'installed') worker.postMessage({
+				if (worker.state === 'installed') worker.postMessage({
 					action: 'skipWaiting'
 				});
 			});
@@ -53,7 +53,7 @@ window.registerServiceWorker = function () {
 	// Ensure refresh is only called once.
 	// This works around a bug in "force update on reload".
 	var refreshing = false;
-	navigator.serviceWorker.addEventListener('controllerchange', function (x) {
+	navigator.serviceWorker.addEventListener('controllerchange', function () {
 		if (refreshing) return;
 		window.location.reload();
 		refreshing = true;

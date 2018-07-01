@@ -74,10 +74,15 @@ self.addEventListener('fetch', function (event) {
 
 
   // https://fonts.googleapis.com should be served from cache here
-  console.log('Serving from network: ' + event.request.url);
-  // catch all in case we have it in the cache, but we're not caching api requests as we'll handle with IndexDB
+  console.log('Attempting to serve from network: ' + event.request.url);
+  // catch all in case we have it in the cache, but we're not caching api requests as we'll handle with IndexedDB
   event.respondWith(caches.match(event.request).then(function (response) {
-    return response || fetch(event.request);
+    return response || fetch(event.request).catch(function (reason) {
+      Promise.reject(new Error('Offline'));
+      console.log('We cant fetch, must be offline:', reason);
+    });
+  }).catch(function () {
+    Promise.reject(new Error('Offline'));
   }));
 });
 

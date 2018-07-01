@@ -21,7 +21,7 @@ self.addEventListener('install', event => {
 self.addEventListener('activate', event => {
   console.log('SW activate');
   return event.waitUntil(
-    caches.keys().then(cacheNames => 
+    caches.keys().then(cacheNames =>
       Promise.all(
         // delete anything else not mine
         cacheNames.filter(name => name !== cacheName).map(otherCache => {
@@ -88,12 +88,19 @@ self.addEventListener('fetch', event => {
 
 
   // https://fonts.googleapis.com should be served from cache here
-  console.log(`Serving from network: ${event.request.url}`);
-  // catch all in case we have it in the cache, but we're not caching api requests as we'll handle with IndexDB
+  console.log(`Attempting to serve from network: ${event.request.url}`);
+  // catch all in case we have it in the cache, but we're not caching api requests as we'll handle with IndexedDB
   event.respondWith(
-    caches.match(event.request).then(response => 
-      response || fetch(event.request)
+    caches.match(event.request)
+    .then(response =>
+      response || fetch(event.request).catch(reason => {
+        Promise.reject(new Error('Offline'));
+        console.log('We cant fetch, must be offline:', reason);
+      })
     )
+    .catch(() => {
+      Promise.reject(new Error('Offline'));
+    })
   );
 });
 
