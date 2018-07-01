@@ -21,15 +21,16 @@ self.addEventListener('install', event => {
 self.addEventListener('activate', event => {
   console.log('SW activate');
   return event.waitUntil(
-    caches.keys().then(cacheNames => {
-      return Promise.all(
+    caches.keys().then(cacheNames => 
+      Promise.all(
         // delete anything else not mine
-        cacheNames.filter(name => name != cacheName).map(otherCache => {
+        cacheNames.filter(name => name !== cacheName).map(otherCache => {
           console.log(`Deleting cache ${otherCache}`);
           caches.delete(otherCache);
+          return true;
         })
-      );
-    })
+      )
+    )
   );
 });
 
@@ -90,9 +91,9 @@ self.addEventListener('fetch', event => {
   console.log(`Serving from network: ${event.request.url}`);
   // catch all in case we have it in the cache, but we're not caching api requests as we'll handle with IndexDB
   event.respondWith(
-    caches.match(event.request).then(response => {
-      return response || fetch(event.request);
-    })
+    caches.match(event.request).then(response => 
+      response || fetch(event.request)
+    )
   );
 });
 

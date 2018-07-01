@@ -21,6 +21,9 @@ class IdbCurrencyConverter {
                         keyPath: 'id'
                     });
                     upgradeDb.createObjectStore('rates');
+                    break;
+                default:
+                    break;
             }
         });
     }
@@ -48,10 +51,10 @@ class IdbCurrencyConverter {
         fetch(`${this.baseApiUrl}currencies`)
             .then(response => response.json())
             .then(json => {
-                let currencies = Object.entries(json.results).map(entry => entry[1]).sort((a, b) => a.id.localeCompare(b.id));
+                const currencies = Object.entries(json.results).map(entry => entry[1]).sort((a, b) => a.id.localeCompare(b.id));
                 // store for later
                 this.dbPromise.then(db => {
-                    let store = db.transaction('currencies', 'readwrite').objectStore('currencies');
+                    const store = db.transaction('currencies', 'readwrite').objectStore('currencies');
                     currencies.map(currency => store.put(currency));
                 });
 
@@ -70,7 +73,7 @@ class IdbCurrencyConverter {
 
         const coolCurrencies = ['USD', 'ZAR', 'UGX', 'KSH', 'NGN'];
         currencies.map(currency => {
-            let newSelect = document.createElement('option');
+            const newSelect = document.createElement('option');
 
             newSelect.innerHTML = `${currency.id} | ${currency.currencyName} (${currency.currencySymbol || currency.id})`;
             newSelect.value = currency.id;
@@ -129,10 +132,10 @@ class IdbCurrencyConverter {
                 console.log(`Successfully fetched for ${pair}: `, value);
                 const swappedValue = parseFloat(1) / value;
 
-                if (value != undefined) {
+                if (value !== undefined) {
                     // store for later
                     this.dbPromise.then(db => {
-                        let store = db.transaction('rates', 'readwrite').objectStore('rates');
+                        const store = db.transaction('rates', 'readwrite').objectStore('rates');
                         store.put({
                             rate: value,
                             timestamp: Date.now()
@@ -154,6 +157,4 @@ class IdbCurrencyConverter {
                 return 0;
             });
     }
-
-
 }

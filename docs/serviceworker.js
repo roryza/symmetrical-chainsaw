@@ -15,10 +15,11 @@ self.addEventListener('activate', function (event) {
     return Promise.all(
     // delete anything else not mine
     cacheNames.filter(function (name) {
-      return name != cacheName;
+      return name !== cacheName;
     }).map(function (otherCache) {
       console.log('Deleting cache ' + otherCache);
       caches.delete(otherCache);
+      return true;
     }));
   }));
 });

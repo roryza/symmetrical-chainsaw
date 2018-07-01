@@ -14,7 +14,7 @@ var IdbCurrencyConverter = function () {
         this.baseApiUrl = 'https://free.currencyconverterapi.com/api/v5/';
         this.idbName = 'currency-converter';
         this.dbPromise = this.openDatabase();
-        this.timeToKeepRates = 1000 * 60 * 1; // 5 min
+        this.timeToKeepRates = 1000 * 60 * 60; // 60 min, same as the api update rate
     }
 
     _createClass(IdbCurrencyConverter, [{
@@ -29,6 +29,9 @@ var IdbCurrencyConverter = function () {
                             keyPath: 'id'
                         });
                         upgradeDb.createObjectStore('rates');
+                        break;
+                    default:
+                        break;
                 }
             });
         }
@@ -125,7 +128,6 @@ var IdbCurrencyConverter = function () {
                             resultElement.value = Number(parseFloat(amount) * rate).toFixed(2);
                         });
                     } else {
-                        console.log(Date.now() - val.timestamp >= _this3.timeToKeepRates);
                         if (Date.now() - val.timestamp >= _this3.timeToKeepRates) {
                             // update it immediately, and query the api then update
                             resultElement.value = Number(parseFloat(amount) * val.rate).toFixed(2);
@@ -155,7 +157,7 @@ var IdbCurrencyConverter = function () {
                 console.log('Successfully fetched for ' + pair + ': ', value);
                 var swappedValue = parseFloat(1) / value;
 
-                if (value != undefined) {
+                if (value !== undefined) {
                     // store for later
                     _this4.dbPromise.then(function (db) {
                         var store = db.transaction('rates', 'readwrite').objectStore('rates');
