@@ -1,0 +1,110 @@
+{
+    "dir": "ltr",
+    "lang": "en",
+    "name": "Currency Converter",
+    "scope": "./",
+    "display": "standalone",
+    "start_url": "https://roryza.github.io/symmetrical-chainsaw/",
+    "short_name": "CCY Convert",
+    "theme_color": "transparent",
+    "description": "Currency Conversion app",
+    "orientation": "any",
+    "background_color": "#3366f9",
+    "icons": [
+        {
+            "src": "./pwaicons/24e45ef1-9307-0c1f-e6b7-c52d10cc71dd.webPlatform.png",
+            "sizes": "44x44",
+            "type": "image/png"
+        },
+        {
+            "src": "./pwaicons/77c251de-4707-7de6-4b68-6fc6eb462f0a.webPlatform.png",
+            "sizes": "48x48",
+            "type": "image/png"
+        },
+        {
+            "src": "./pwaicons/feb21930-047b-5551-590e-9fb2c2430754.webPlatform.png",
+            "sizes": "1240x600",
+            "type": "image/png"
+        },
+        {
+            "src": "./pwaicons/064b52eb-27cd-d2f0-52db-ac341868c3f8.webPlatform.png",
+            "sizes": "300x300",
+            "type": "image/png"
+        },
+        {
+            "src": "./pwaicons/699bc536-725d-329d-6e26-e7d997bb5f0a.webPlatform.png",
+            "sizes": "150x150",
+            "type": "image/png"
+        },
+        {
+            "src": "./pwaicons/53c9734e-bd2a-5526-8718-bcecf67cfad7.webPlatform.png",
+            "sizes": "88x88",
+            "type": "image/png"
+        },
+        {
+            "src": "./pwaicons/3a6fe729-a539-0a27-5680-d330f9c7f1c7.webPlatform.png",
+            "sizes": "24x24",
+            "type": "image/png"
+        },
+        {
+            "src": "./pwaicons/3c9ecea8-7194-c093-0c6d-d493b2ff16cd.webPlatform.png",
+            "sizes": "50x50",
+            "type": "image/png"
+        },
+        {
+            "src": "./pwaicons/b8c794ff-3afd-e350-91b6-601acc993adf.webPlatform.png",
+            "sizes": "620x300",
+            "type": "image/png"
+        },
+        {
+            "src": "./pwaicons/9893812c-4761-07a6-b9c9-f3bcdb85cd3a.webPlatform.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "./pwaicons/34af4dbb-2c82-df79-4fd8-43567daa3f94.webPlatform.png",
+            "sizes": "144x144",
+            "type": "image/png"
+        },
+        {
+            "src": "./pwaicons/547e729c-41ac-c649-f73c-c4d176be24fd.webPlatform.png",
+            "sizes": "96x96",
+            "type": "image/png"
+        },
+        {
+            "src": "./pwaicons/28878a5c-1d78-af4a-e12a-db610ef377fd.webPlatform.png",
+            "sizes": "72x72",
+            "type": "image/png"
+        },
+        {
+            "src": "./pwaicons/3c1f316c-2153-f569-0362-648e6f3d66f7.webPlatform.png",
+            "sizes": "36x36",
+            "type": "image/png"
+        },
+        {
+            "src": "./pwaicons/ios/ios-appicon-1024-1024.png",
+            "sizes": "1024x1024",
+            "type": "image/png"
+        },
+        {
+            "src": "./pwaicons/6b51f8ba-7b8e-632f-b4bf-6fba93ca4759.webPlatform.png",
+            "sizes": "180x180",
+            "type": "image/png"
+        },
+        {
+            "src": "./pwaicons/ef2026f8-6dc9-6746-8fcb-185cc7ffc190.webPlatform.png",
+            "sizes": "152x152",
+            "type": "image/png"
+        },
+        {
+            "src": "./pwaicons/3dd7e81a-b182-42e4-7865-65f2fc861d71.webPlatform.png",
+            "sizes": "120x120",
+            "type": "image/png"
+        },
+        {
+            "src": "./pwaicons/ec8c9d44-7ad9-7c68-762a-8edc44e9181b.webPlatform.png",
+            "sizes": "76x76",
+            "type": "image/png"
+        }
+    ]
+}

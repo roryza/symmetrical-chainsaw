@@ -14,6 +14,11 @@ gulp.task('copy', x => gulp.src([
       './src/main.css',
       './src/index.html',
       './src/idb.js',
+      './src/favicons/*',
+      './src/pwaicons/*',
+      './src/manifest.json',
+      './src/browserconfig.xml',
+      './src/favicon.ico'
   ],  {base: './src/'}) 
   .pipe(gulp.dest('./docs/'))
 );
