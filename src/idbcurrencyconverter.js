@@ -32,9 +32,8 @@ class IdbCurrencyConverter {
                     this.queryForCurrencies();
                 else {
                     // use currencies stored locally to populate dropdowns
-                    this.populateCurrencyDropdowns(currencies, this.fromDropdownRef);
-                    this.populateCurrencyDropdowns(currencies, this.toDropdownRef);
-                }
+                    this.populateCurrencyDropdowns(currencies, this.fromDropdownRef, 'USD');
+                    this.populateCurrencyDropdowns(currencies, this.toDropdownRef, 'ZAR');                }
             })
             .catch(reason => {
                 console.log(reason);
@@ -54,23 +53,32 @@ class IdbCurrencyConverter {
                     currencies.map(currency => store.put(currency));
                 });
 
-                this.populateCurrencyDropdowns(currencies, this.fromDropdownRef);
-                this.populateCurrencyDropdowns(currencies, this.toDropdownRef);
+                this.populateCurrencyDropdowns(currencies, this.fromDropdownRef, 'USD');
+                this.populateCurrencyDropdowns(currencies, this.toDropdownRef, 'ZAR');
             })
             .catch(x => {
                 console.log('failed to fetch currencies', x);
             });
     }
 
-    populateCurrencyDropdowns(currencies, elementRef) {
+    populateCurrencyDropdowns(currencies, elementRef, defaultSelection) {
         for (let i = 0; i < elementRef.options.length; i++) {
             elementRef.options.remove(i);
         }
 
+        const coolCurrencies = ['USD', 'ZAR', 'UGX', 'KSH', 'NGN'];
         currencies.map(currency => {
             let newSelect = document.createElement('option');
-            newSelect.innerHTML = `<option value="${currency.id}">${currency.id} | ${currency.currencyName} (${currency.currencySymbol || currency.id})</option>`;
+            
+            newSelect.innerHTML = `${currency.id} | ${currency.currencyName} (${currency.currencySymbol || currency.id})`;
             newSelect.value = currency.id;
+
+            if (currency.id === defaultSelection)
+                newSelect.selected = true;
+
+            if (coolCurrencies.includes(currency.id))
+                newSelect.className = 'coolcurrency';
+
             elementRef.add(newSelect);
         });
     }
@@ -89,10 +97,10 @@ class IdbCurrencyConverter {
             db.transaction('rates').objectStore('rates').get(pair).then( val => {
                 if (val === undefined)
                     this.queryForRate(fromCurrency, toCurrency).then(rate => {
-                        resultElement.value = parseFloat(amount) * rate;
+                        resultElement.value = Number(parseFloat(amount) * rate).toFixed(2);
                     });
                 else
-                    resultElement.value = parseFloat(amount) * val.rate;
+                    resultElement.value = Number(parseFloat(amount) * val.rate).toFixed(2);
             });
         });
     }

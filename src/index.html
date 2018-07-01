@@ -23,7 +23,7 @@
 
 					<form>
 						<label for="amount">Amount: </label>
-						<input id="amount" type="number" name="amount" value="1" />
+						<input id="amount" type="number" name="amount" value="1" step="0.01"/>
 						<br/>
 						<label for="fromDropdown">From: </label>
 						<select id="fromDropdown"></select>
@@ -34,7 +34,7 @@
 						<input type="submit" value="Convert" onClick="convert(event)"/>
 						<br />
 						<label for="result">Result: </label>
-						<input id="result" type="number" name="result" readonly />
+						<input id="result" type="number" name="result" readonly step="0.01" />
 						<br/>
 
 					</form>

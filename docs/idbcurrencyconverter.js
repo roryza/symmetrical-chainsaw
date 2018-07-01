@@ -44,8 +44,8 @@ var IdbCurrencyConverter = function () {
                     // fetch some if we dont have any
                     _this.queryForCurrencies();else {
                     // use currencies stored locally to populate dropdowns
-                    _this.populateCurrencyDropdowns(currencies, _this.fromDropdownRef);
-                    _this.populateCurrencyDropdowns(currencies, _this.toDropdownRef);
+                    _this.populateCurrencyDropdowns(currencies, _this.fromDropdownRef, 'USD');
+                    _this.populateCurrencyDropdowns(currencies, _this.toDropdownRef, 'ZAR');
                 }
             }).catch(function (reason) {
                 console.log(reason);
@@ -74,23 +74,30 @@ var IdbCurrencyConverter = function () {
                     });
                 });
 
-                _this2.populateCurrencyDropdowns(currencies, _this2.fromDropdownRef);
-                _this2.populateCurrencyDropdowns(currencies, _this2.toDropdownRef);
+                _this2.populateCurrencyDropdowns(currencies, _this2.fromDropdownRef, 'USD');
+                _this2.populateCurrencyDropdowns(currencies, _this2.toDropdownRef, 'ZAR');
             }).catch(function (x) {
                 console.log('failed to fetch currencies', x);
             });
         }
     }, {
         key: 'populateCurrencyDropdowns',
-        value: function populateCurrencyDropdowns(currencies, elementRef) {
+        value: function populateCurrencyDropdowns(currencies, elementRef, defaultSelection) {
             for (var i = 0; i < elementRef.options.length; i++) {
                 elementRef.options.remove(i);
             }
 
+            var coolCurrencies = ['USD', 'ZAR', 'UGX', 'KSH', 'NGN'];
             currencies.map(function (currency) {
                 var newSelect = document.createElement('option');
-                newSelect.innerHTML = '<option value="' + currency.id + '">' + currency.id + ' | ' + currency.currencyName + ' (' + (currency.currencySymbol || currency.id) + ')</option>';
+
+                newSelect.innerHTML = currency.id + ' | ' + currency.currencyName + ' (' + (currency.currencySymbol || currency.id) + ')';
                 newSelect.value = currency.id;
+
+                if (currency.id === defaultSelection) newSelect.selected = true;
+
+                if (coolCurrencies.includes(currency.id)) newSelect.className = 'coolcurrency';
+
                 elementRef.add(newSelect);
             });
         }
@@ -112,8 +119,8 @@ var IdbCurrencyConverter = function () {
             return this.dbPromise.then(function (db) {
                 db.transaction('rates').objectStore('rates').get(pair).then(function (val) {
                     if (val === undefined) _this3.queryForRate(fromCurrency, toCurrency).then(function (rate) {
-                        resultElement.value = parseFloat(amount) * rate;
-                    });else resultElement.value = parseFloat(amount) * val.rate;
+                        resultElement.value = Number(parseFloat(amount) * rate).toFixed(2);
+                    });else resultElement.value = Number(parseFloat(amount) * val.rate).toFixed(2);
                 });
             });
         }
