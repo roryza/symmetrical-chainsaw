@@ -5,7 +5,7 @@ class IdbCurrencyConverter {
         this.toDropdownRef = toDropdown;
 
         this.baseApiUrl = 'https://free.currencyconverterapi.com/api/v5/';
-        this.idbName = 'currency-converter'
+        this.idbName = 'currency-converter';
         this.dbPromise = this.openDatabase();
     }
 
@@ -40,7 +40,7 @@ class IdbCurrencyConverter {
                 console.log(reason);
                 // fetch them if we have no db/serviceworker
                 this.queryForCurrencies();
-            })
+            });
     }
 
     queryForCurrencies() {
@@ -80,7 +80,7 @@ class IdbCurrencyConverter {
         const toCurrency = this.toDropdownRef.options[this.toDropdownRef.selectedIndex].value;
 
         this.getRate(fromCurrency, toCurrency, amount, resultElement);
-    };
+    }
 
     getRate(fromCurrency, toCurrency, amount, resultElement) {
         const pair = `${fromCurrency}_${toCurrency}`;
@@ -126,7 +126,7 @@ class IdbCurrencyConverter {
                 }
             })
             .catch(err => {
-                console.log('Request failed', err)
+                console.log('Request failed', err);
                 return 0;
             });
     }

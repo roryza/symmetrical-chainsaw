@@ -4,7 +4,7 @@ window.onload = () => {
 			document.getElementById('toDropdown')
 		);
 		icc.getCurrencies();
-}
+};
 
 window.convert = (e) => {
 	e.preventDefault();
@@ -12,7 +12,7 @@ window.convert = (e) => {
 	let amount = document.getElementById('amount').value;
 	let resultElement = document.getElementById('result');
 	icc.convertCurrency(amount, resultElement);
-}
+};
 
 window.registerServiceWorker = () => {
 	if (!navigator.serviceWorker) {
@@ -63,4 +63,4 @@ window.registerServiceWorker = () => {
 		window.location.reload();
 		refreshing = true;
 	});
-}
+};

@@ -15,7 +15,7 @@ self.addEventListener('install', event => {
         'https://fonts.gstatic.com/s/muli/v11/7Auwp_0qiz-afTLGLQ.woff2'
       ])
     )
-  )
+  );
 });
 
 self.addEventListener('activate', event => {
@@ -26,11 +26,11 @@ self.addEventListener('activate', event => {
         // delete anything else not mine
         cacheNames.filter(name => name != cacheName).map(otherCache => {
           console.log(`Deleting cache ${otherCache}`);
-          caches.delete(otherCache)
+          caches.delete(otherCache);
         })
       );
     })
-  )
+  );
 });
 
 self.addEventListener('fetch', event => {
