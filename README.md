@@ -2,7 +2,7 @@
 
 This is a PWA (Progressive Web App) written as part of the [Andela](https://andela.com/) Learning Community **#7DaysOfCodeChallenge**.
 
-####Features:
+#### Features:
 - Allows the user to select two currencies, enter an amount and convert between them at the current exchange rate.
 - Is "installable" by using the "Add to Homescreen" feature in Google Chrome as well as similar features in other browsers and Windows.
 - Responsive design that fits well on mobile phones.
@@ -19,18 +19,18 @@ Jake Archibald's [idb library](https://github.com/jakearchibald/idb) has been us
 
 [Express](https://expressjs.com/) is a simple web server used for testing during development, in order for the service worker to be enabled.
 
-####Demo:
+#### Demo:
 Simply go to **https://roryza.github.io/symmetrical-chainsaw/**
 
-####Instructions:
-#####Local:
+#### Instructions:
+##### Local:
 Clone or download the repo.
 Run `npm install` to restore all dependencies.
 Run `npm install -g gulp` to make sure gulp exists on the path.
 Run `npm start` which will copy some files, transform ES6 -> ES5 and start a small webserver.
 Go to http://localhost:3080/ in your browser.
 
-#####Hosted: 
+##### Hosted: 
 Clone or download the repo.
 Upload the "/docs" folder to a web host. (the built files are included in the repo for hosting on Github Pages)
 
