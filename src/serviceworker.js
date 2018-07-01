@@ -15,8 +15,7 @@ self.addEventListener('install', event => {
       ])
     )
   )
-  }
-);
+});
 
 self.addEventListener('activate', event => {
   console.log('SW activate');
@@ -26,32 +25,32 @@ self.addEventListener('activate', event => {
         // delete anything else not mine
         cacheNames.filter(name => name != cacheName).map(otherCache => {
           console.log(`Deleting cache ${otherCache}`);
-          caches.delete(otherCache)})
+          caches.delete(otherCache)
+        })
       );
     })
   )
-  }
-);
+});
 
 self.addEventListener('fetch', event => {
-    console.log(`SW fetching: ${event.request.url}`);
+  console.log(`SW fetching: ${event.request.url}`);
 
-    const requestUrl = new URL(event.request.url);
+  const requestUrl = new URL(event.request.url);
 
-    // if there's any files we missed pre-caching above either locally or from google fonts (the dynamically generated 
-    // css might reference different kinds of font files for other browsers) we want to cache them
-    if (requestUrl.origin === location.origin || requestUrl.origin === 'https://fonts.gstatic.com') {
-      
-      // return "homepage"
-      if (requestUrl.pathname === '/') {
-        event.respondWith(        
-          caches.open(cacheName).then(cache =>
-            cache.match('index.html').then(response => {
-            if (response){
+  // if there's any files we missed pre-caching above either locally or from google fonts (the dynamically generated 
+  // css might reference different kinds of font files for other browsers) we want to cache them
+  if (requestUrl.origin === location.origin || requestUrl.origin === 'https://fonts.gstatic.com') {
+
+    // return "homepage"
+    if (requestUrl.pathname === '/') {
+      event.respondWith(
+        caches.open(cacheName).then(cache =>
+          cache.match('index.html').then(response => {
+            if (response) {
               console.log(`Found in cache: ${event.request.url}`);
               return response;
-            } 
-      
+            }
+
             console.log(`Need network for: ${event.request.url}`);
             return fetch(event.request).then(networkResponse => {
               cache.put('index.html', networkResponse.clone());
@@ -59,20 +58,20 @@ self.addEventListener('fetch', event => {
             });
           })
         )
-        );
-        return;
-      }
+      );
+      return;
+    }
 
-      console.log(`Serving from cache: ${event.request.url}`);
-      // if not cached, fetch from network and cache
-      event.respondWith(        
-        caches.open(cacheName).then(cache =>
+    console.log(`Serving from cache: ${event.request.url}`);
+    // if not cached, fetch from network and cache
+    event.respondWith(
+      caches.open(cacheName).then(cache =>
         cache.match(event.request).then(response => {
-          if (response){
+          if (response) {
             console.log(`Found in cache: ${event.request.url}`);
             return response;
-          } 
-    
+          }
+
           console.log(`Need network for: ${event.request.url}`);
           return fetch(event.request).then(networkResponse => {
             cache.put(event.request, networkResponse.clone());
@@ -80,21 +79,21 @@ self.addEventListener('fetch', event => {
           });
         })
       )
-      );
-      return;
-    }
-    // https://free.currencyconverterapi.com bypasses cache
-
-
-    // https://fonts.googleapis.com should be served from cache here
-    console.log(`Serving from network: ${event.request.url}`);
-    // catch all in case we have it in the cache, but we're not caching api requests as we'll handle with IndexDB
-    event.respondWith(
-      caches.match(event.request).then(response => {
-        return response || fetch(event.request);
-      })
     );
-  });
+    return;
+  }
+  // https://free.currencyconverterapi.com bypasses cache
+
+
+  // https://fonts.googleapis.com should be served from cache here
+  console.log(`Serving from network: ${event.request.url}`);
+  // catch all in case we have it in the cache, but we're not caching api requests as we'll handle with IndexDB
+  event.respondWith(
+    caches.match(event.request).then(response => {
+      return response || fetch(event.request);
+    })
+  );
+});
 
 
 self.addEventListener('message', event => {

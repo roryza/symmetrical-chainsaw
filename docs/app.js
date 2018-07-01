@@ -1,7 +1,9 @@
 "use strict";
 
+window.baseApiUrl = 'https://free.currencyconverterapi.com/api/v5/';
+
 window.onload = function () {
-	fetch("https://free.currencyconverterapi.com/api/v5/currencies").then(function (response) {
+	fetch(baseApiUrl + "currencies").then(function (response) {
 		return response.json();
 	}).then(function (json) {
 		var currencies = Object.entries(json.results).map(function (entry) {
@@ -44,7 +46,7 @@ window.convert = function (e) {
 };
 
 window.convertCurrency = function (fromCurrency, toCurrency, amount, resultElement) {
-	var apiUrl = "https://free.currencyconverterapi.com/api/v5/convert?q=" + fromCurrency + "_" + toCurrency + "&compact=y";
+	var apiUrl = baseApiUrl + "convert?q=" + fromCurrency + "_" + toCurrency + "&compact=y";
 
 	fetch(apiUrl).then(function (response) {
 		return response.json();
@@ -63,19 +65,23 @@ window.registerServiceWorker = function () {
 		return;
 	}
 
-	navigator.serviceWorker.register('/serviceworker.js').then(function (reg) {
+	navigator.serviceWorker.register('./serviceworker.js').then(function (reg) {
 		if (!navigator.serviceWorker.controller) return;
 
 		if (reg.waiting) {
 			console.log('reg.waiting');
-			reg.waiting.postMessage({ action: 'skipWaiting' });
+			reg.waiting.postMessage({
+				action: 'skipWaiting'
+			});
 			return;
 		}
 
 		if (reg.installing) {
 			console.log('reg.installing');
 			reg.installing.addEventListener('statechange', function (x) {
-				if (reg.installing.state == 'installed') reg.installing.postMessage({ action: 'skipWaiting' });
+				if (reg.installing.state == 'installed') reg.installing.postMessage({
+					action: 'skipWaiting'
+				});
 			});
 			return;
 		}
@@ -83,7 +89,9 @@ window.registerServiceWorker = function () {
 		reg.addEventListener('updatefound', function (x) {
 			console.log('updatefound');
 			reg.installing.addEventListener('statechange', function (worker) {
-				if (worker.state == 'installed') worker.postMessage({ action: 'skipWaiting' });
+				if (worker.state == 'installed') worker.postMessage({
+					action: 'skipWaiting'
+				});
 			});
 		});
 	});
