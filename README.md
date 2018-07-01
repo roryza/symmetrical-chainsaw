@@ -9,9 +9,9 @@ This is a PWA (Progressive Web App) written as part of the [Andela](https://ande
 - All javascript written in ES6 (gulp/babel used to transform to ES5)
 - Working copy hosted on [Github Pages](https://roryza.github.io/symmetrical-chainsaw/)
 - Serviceworker with caching of pages for offline mode
-- IndexDB for caching exchange rates from [CurrenctConverterAPI](https://free.currencyconverterapi.com/)
+- IndexedDB for caching exchange rates from [CurrencyConverterAPI](https://free.currencyconverterapi.com/)
 
-The code has been intentionally kept fairly minimal. The purpose is to show off everything written "from scratch" and thus no UI frameworks, app starter kits, etc have been used.
+The code has intentionally been kept fairly minimal. The purpose is to show off everything written "from scratch" and thus no UI frameworks, app starter kits, etc have been used.
 
 [NPM](https://www.npmjs.com/) is used for some development dependencies like [Gulp](https://gulpjs.com/) and [Babel](https://babeljs.io/) which are used to transform the ES6 code to ES6 so it can be understood by a wider set of browsers.
 
@@ -39,8 +39,8 @@ Upload the "/docs" folder to a web host. (the built files are included in the re
 
 ### Known Issues
 - The currencies list is only loaded once. Theoretically this could change, and this would require a code change to "refresh"
-- The 60 minutes that rates are cached is an approximation of the refreshing on the free API. It is possible a value in the cache is still used when a new rate is available via the API. We could change this to always use the cached rate then the latest rate however that would increase the number of API requests substantially.
-- Their isn't a "nice" refresh dialog. SW will basically always skip waiting.
+- The 60 minutes that rates are cached is an approximation of the refreshing on the free API. It is possible a value in the cache is still used when a new rate is available via the API. We could change this to always use the cached rate and then the latest rate however that would increase the number of API requests substantially.
+- Their isn't a "friendly" request to refresh dialog when the SW is updated. SW will always skip waiting. Could result in a "double page load" when a user revisits and there have been updates.
 
 ### Nice to haves
 - Detect when the user is offline and show a warning
@@ -49,4 +49,3 @@ Upload the "/docs" folder to a web host. (the built files are included in the re
 - Remember the users last currency selection
 - Provide a log/history of conversions (maybe, might clutter simple interface)
 - Progress indicator when fetching a rate
-- 
