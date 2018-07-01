@@ -5,7 +5,7 @@ var cacheName = 'CCCache-v1';
 self.addEventListener('install', function (event) {
   console.log('SW install');
   return event.waitUntil(caches.open(cacheName).then(function (cache) {
-    return cache.addAll(['index.html', 'app.js', 'idb.js', 'main.css', 'https://fonts.googleapis.com/css?family=Muli', 'https://fonts.gstatic.com/s/muli/v11/7Auwp_0qiz-afTzGLRrX.woff2', 'https://fonts.gstatic.com/s/muli/v11/7Auwp_0qiz-afTLGLQ.woff2']);
+    return cache.addAll(['index.html', 'app.js', 'idb.js', 'idbcurrencyconverter.js', 'main.css', 'https://fonts.googleapis.com/css?family=Muli', 'https://fonts.gstatic.com/s/muli/v11/7Auwp_0qiz-afTzGLRrX.woff2', 'https://fonts.gstatic.com/s/muli/v11/7Auwp_0qiz-afTLGLQ.woff2']);
   }));
 });
 

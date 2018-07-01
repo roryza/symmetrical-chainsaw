@@ -5,7 +5,7 @@ const runSequence = require('run-sequence');
 const del = require('del');
 
 gulp.task("default", done => 
-  runSequence('clean', ['copy', 'transform', 'transform-sw'], done)
+  runSequence('clean', ['copy', 'transform'], done)
 );
 
 gulp.task('clean', done => del(['./docs/'], done));
@@ -19,13 +19,7 @@ gulp.task('copy', x => gulp.src([
 );
 
 gulp.task("transform", x =>
-  gulp.src("src/app.js")
-    .pipe(babel())
-    .pipe(gulp.dest("docs"))
-);
-
-gulp.task("transform-sw", x =>
-  gulp.src("src/serviceworker.js")
+  gulp.src(['src/app.js', 'src/idbcurrencyconverter.js', 'src/serviceworker.js'])
     .pipe(babel())
     .pipe(gulp.dest("docs"))
 );

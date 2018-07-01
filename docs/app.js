@@ -1,62 +1,16 @@
-"use strict";
-
-window.baseApiUrl = 'https://free.currencyconverterapi.com/api/v5/';
+'use strict';
 
 window.onload = function () {
-	fetch(baseApiUrl + "currencies").then(function (response) {
-		return response.json();
-	}).then(function (json) {
-		var currencies = Object.entries(json.results).map(function (entry) {
-			return entry[1];
-		}).sort(function (a, b) {
-			return a.id.localeCompare(b.id);
-		});
-		populateCurrencies(currencies, "fromDropdown");
-		populateCurrencies(currencies, "toDropdown");
-	});
-};
-
-window.populateCurrencies = function (currencies, elementId) {
-	var selectHTML = "";
-	var elementRef = document.getElementById(elementId);
-	var currentlySelectedValue = elementRef.value;
-
-	var select = elementRef.options.length;
-
-	for (var i = 0; i < select; i++) {
-		elementRef.options.remove(i);
-	}
-
-	currencies.map(function (currency) {
-		var newSelect = document.createElement('option');
-		newSelect.innerHTML = "<option value=\"" + currency.id + "\">" + currency.id + " | " + currency.currencyName + " (" + (currency.currencySymbol || currency.id) + ")</option>";
-		newSelect.value = currency.id;
-		elementRef.add(newSelect);
-	});
+	window.icc = new IdbCurrencyConverter(document.getElementById('fromDropdown'), document.getElementById('toDropdown'));
+	icc.getCurrencies();
 };
 
 window.convert = function (e) {
 	e.preventDefault();
 	e.stopPropagation();
-	var fromDropdown = document.getElementById("fromDropdown");
-	var toDropdown = document.getElementById("toDropdown");
-	var amount = document.getElementById("amount").value;
-	var resultElement = document.getElementById("result");
-	convertCurrency(fromDropdown.options[fromDropdown.selectedIndex].value, toDropdown.options[toDropdown.selectedIndex].value, amount, resultElement);
-};
-
-window.convertCurrency = function (fromCurrency, toCurrency, amount, resultElement) {
-	var apiUrl = baseApiUrl + "convert?q=" + fromCurrency + "_" + toCurrency + "&compact=y";
-
-	fetch(apiUrl).then(function (response) {
-		return response.json();
-	}).then(function (data) {
-		var value = data[fromCurrency + "_" + toCurrency].val;
-
-		if (value != undefined) resultElement.value = parseFloat(value) * parseFloat(amount);else console.log(new Error("Invalid result received"));
-	}).catch(function (err) {
-		console.log('Request failed', err);
-	});
+	var amount = document.getElementById('amount').value;
+	var resultElement = document.getElementById('result');
+	icc.convertCurrency(amount, resultElement);
 };
 
 window.registerServiceWorker = function () {

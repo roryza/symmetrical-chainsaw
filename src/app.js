@@ -1,61 +1,18 @@
-window.baseApiUrl = 'https://free.currencyconverterapi.com/api/v5/';
-
 window.onload = () => {
-	fetch(`${baseApiUrl}currencies`)
-		.then(response => response.json())
-		.then(json => {
-			let currencies = Object.entries(json.results).map(entry => entry[1]).sort((a, b) => a.id.localeCompare(b.id));
-			populateCurrencies(currencies, "fromDropdown");
-			populateCurrencies(currencies, "toDropdown");
-		});
-}
-
-window.populateCurrencies = (currencies, elementId) => {
-	let selectHTML = "";
-	const elementRef = document.getElementById(elementId);
-	const currentlySelectedValue = elementRef.value;
-
-	let select = elementRef.options.length;
-
-	for (let i = 0; i < select; i++) {
-		elementRef.options.remove(i);
-	}
-
-	currencies.map(currency => {
-		let newSelect = document.createElement('option');
-		newSelect.innerHTML = `<option value="${currency.id}">${currency.id} | ${currency.currencyName} (${currency.currencySymbol || currency.id})</option>`;
-		newSelect.value = currency.id;
-		elementRef.add(newSelect);
-	});
+		window.icc = new IdbCurrencyConverter(
+			document.getElementById('fromDropdown'),
+			document.getElementById('toDropdown')
+		);
+		icc.getCurrencies();
 }
 
 window.convert = (e) => {
 	e.preventDefault();
 	e.stopPropagation();
-	let fromDropdown = document.getElementById("fromDropdown");
-	let toDropdown = document.getElementById("toDropdown");
-	let amount = document.getElementById("amount").value;
-	let resultElement = document.getElementById("result");
-	convertCurrency(fromDropdown.options[fromDropdown.selectedIndex].value, toDropdown.options[toDropdown.selectedIndex].value, amount, resultElement);
+	let amount = document.getElementById('amount').value;
+	let resultElement = document.getElementById('result');
+	icc.convertCurrency(amount, resultElement);
 }
-
-window.convertCurrency = (fromCurrency, toCurrency, amount, resultElement) => {
-	let apiUrl = `${baseApiUrl}convert?q=${fromCurrency}_${toCurrency}&compact=y`;
-
-	fetch(apiUrl)
-		.then((response) => response.json())
-		.then((data) => {
-			let value = data[`${fromCurrency}_${toCurrency}`].val;
-
-			if (value != undefined)
-				resultElement.value = parseFloat(value) * parseFloat(amount);
-			else
-				console.log(new Error("Invalid result received"));
-		})
-		.catch(err => {
-			console.log('Request failed', err)
-		});
-};
 
 window.registerServiceWorker = () => {
 	if (!navigator.serviceWorker) {

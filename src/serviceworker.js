@@ -8,6 +8,7 @@ self.addEventListener('install', event => {
         'index.html',
         'app.js',
         'idb.js',
+        'idbcurrencyconverter.js',
         'main.css',
         'https://fonts.googleapis.com/css?family=Muli',
         'https://fonts.gstatic.com/s/muli/v11/7Auwp_0qiz-afTzGLRrX.woff2',
